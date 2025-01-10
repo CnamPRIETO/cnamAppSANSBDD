@@ -20,7 +20,7 @@ require('./routes/produits.routes.js')(app);
 require('./routes/auth.routes.js')(app);
 
 // Démarrer le serveur
-const PORT = process.env.PORT || 443;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Serveur API en cours d'exécution à http://localhost:${PORT}`);
 });
