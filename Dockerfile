@@ -1,34 +1,26 @@
 FROM php:7.4-apache
 
-# Installer Node.js, npm et autres dépendances
 RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     unzip \
     zip \
-    && rm -rf /var/lib/apt/lists/* \
-    && a2enmod proxy \
-    && a2enmod proxy_http
-
-# Copier la configuration Apache
+ && rm -rf /var/lib/apt/lists/* \
+ && a2enmod proxy \
+ && a2enmod proxy_http
 COPY ./deploy/my-proxy.conf /etc/apache2/sites-available/000-default.conf
 
-# Copier le code de l'application
 COPY ./deploy/ /var/www/html
 
-# Définir le répertoire de travail
 WORKDIR /var/www/html/api
 
-# Installer les dépendances Node.js et pm2
 RUN npm install \
-    && npm install pm2 -g
+ && npm install pm2 -g \
+ && env PATH=$PATH:/usr/local/lib/node_modules/pm2/bin/pm2
 
-# Copier le script d'initialisation
-COPY ./deploy/start.sh /start.sh
-RUN chmod +x /start.sh
 
-# Exposer le port 80
+# Exposer le port 80 pour permettre les connexions entrantes
 EXPOSE 80
 
-# Définir le script de démarrage
-CMD ["/start.sh"]
+# Définir l'entrée de l'application
+CMD pm2 start ./index.js && apache2-foreground
