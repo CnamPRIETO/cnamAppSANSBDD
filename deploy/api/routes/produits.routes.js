@@ -1,10 +1,13 @@
+const { checkJwt}  = require('./jwtMiddleware');
+
 module.exports = app => {
-    const produits = require("../controllers/produits.controllers.js");
+    const catalogue = require("../controllers/produits.controllers.js");
   
     let router = require("express").Router();
   
-    // GET /api/produits
-    router.get("/", produits.getProduits);
+
+   
+    router.get("/", checkJwt,catalogue.get);
   
     app.use('/api/produits', router);
-};
+  };
