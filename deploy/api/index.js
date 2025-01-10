@@ -1,8 +1,10 @@
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-const app  = express ();
+const app = express();
 
+// Middleware
 const corsOptions = {
   origin: "*",
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -11,24 +13,14 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// parse requests of content-type - application/json
-app.use(express.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 
-require("./routes/catalogue.routes")(app);
-require("./routes/utilisateur.routes")(app);
+require('./routes/produits.routes.js')(app);
+require('./routes/auth.routes.js')(app);
 
-
-
-// set port, listen for requests
-const PORT =  443;
+// Démarrer le serveur
+const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+    console.log(`Serveur API en cours d'exécution à http://localhost:${PORT}`);
 });
-
-
-
